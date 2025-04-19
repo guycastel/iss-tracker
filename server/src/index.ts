@@ -1,17 +1,17 @@
-import cors from 'cors'
 import dotenv from 'dotenv'
+dotenv.config()
+
+import cors from 'cors'
 import express from 'express'
 import fetch from 'node-fetch'
 import { ISSNowResponseData } from './types'
-
-dotenv.config()
 
 const serverPort: string = process.env.SERVER_PORT ?? '3000'
 const clientPort: string = process.env.CLIENT_PORT ?? '5173'
 const enableAllOrigins: boolean = process.env.ENABLE_ALL_ORIGINS === 'true'
 const allowedOrigins: string[] = [`http://localhost:${clientPort}`]
 
-const POLLING_URL: string = 'http://api.open-notify.org/iss-now.json'
+const ISS_NOW_API_URL: string = 'http://api.open-notify.org/iss-now.json'
 
 const app = express()
 
@@ -22,9 +22,9 @@ app.use(
 )
 
 // Update the GET /iss-location endpoint to use ISSNowResponseData
-app.get('/iss-location', async (req, res) => {
+app.get('/api/iss-location', async (req, res) => {
 	try {
-		const response = await fetch(POLLING_URL)
+		const response = await fetch(ISS_NOW_API_URL)
 		if (response.ok) {
 			const data: ISSNowResponseData =
 				(await response.json()) as ISSNowResponseData

@@ -10,3 +10,4 @@ dist/
 # Environment variables files
 .env
 .env.*
+!.env.example

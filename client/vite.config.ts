@@ -1,15 +1,16 @@
-import dotenv from 'dotenv'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 
-dotenv.config()
+export default defineConfig(({ mode }) => {
+	const env = loadEnv(mode, process.cwd())
 
-export default defineConfig({
-	plugins: [react()],
-	server: {
-		port: parseInt(process.env.CLIENT_PORT ?? '5173'),
-	},
-	preview: {
-		port: parseInt(process.env.CLIENT_PORT ?? '5173'),
-	},
+	return {
+		plugins: [react()],
+		server: {
+			port: parseInt(env.VITE_CLIENT_PORT ?? '5173'),
+		},
+		preview: {
+			port: parseInt(env.VITE_CLIENT_PORT ?? '5173'),
+		},
+	}
 })
