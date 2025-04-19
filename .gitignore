@@ -1,0 +1,12 @@
+# Node dependency directories
+node_modules/
+
+# Build directories
+dist/
+
+# Editor directories
+.vscode/
+
+# Environment variables files
+.env
+.env.*
