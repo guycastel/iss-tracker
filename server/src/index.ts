@@ -1,18 +1,19 @@
-import cors from 'cors';
-import dotenv from 'dotenv';
-import express from 'express';
-import { initContract } from '@ts-rest/core';
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
-import { z } from 'zod';
+import cors from 'cors'
+import dotenv from 'dotenv'
+import express from 'express'
+import fetch from 'node-fetch'
+import { ISSNowResponseData } from './types'
 
 dotenv.config()
 
-const app = express()
-const port = 3000
+const serverPort: string = process.env.SERVER_PORT ?? '3000'
+const clientPort: string = process.env.CLIENT_PORT ?? '5173'
+const enableAllOrigins: boolean = process.env.ENABLE_ALL_ORIGINS === 'true'
+const allowedOrigins: string[] = [`http://localhost:${clientPort}`]
 
-const clientPort = process.env.CLIENT_PORT ?? '5173'
-const enableAllOrigins = process.env.ENABLE_ALL_ORIGINS === 'true'
-const allowedOrigins = [`http://localhost:${clientPort}`]
+const POLLING_URL: string = 'http://api.open-notify.org/iss-now.json'
+
+const app = express()
 
 app.use(
 	cors({
@@ -20,59 +21,25 @@ app.use(
 	})
 )
 
-// Define the ts-rest contract
-const c = initContract()
-export const contract = c.router({
-	getIssLocation: {
-		method: 'GET',
-		path: '/iss-location',
-		responses: {
-			200: z.object({
-				message: z.string(),
-				timestamp: z.number(),
-				iss_position: z.object({
-					latitude: z.string(),
-					longitude: z.string(),
-				}),
-			}),
-		},
-	},
-})
-
-// Initial ISS location data
-let issLocation = {
-	message: 'success',
-	timestamp: Date.now(),
-	iss_position: {
-		latitude: '0.0',
-		longitude: '0.0',
-	},
-}
-
-// Fetch ISS location every 10 seconds
-setInterval(async () => {
+// Update the GET /iss-location endpoint to use ISSNowResponseData
+app.get('/iss-location', async (req, res) => {
 	try {
-		const response = await fetch('http://api.open-notify.org/iss-now.json')
+		const response = await fetch(POLLING_URL)
 		if (response.ok) {
-			issLocation = await response.json()
+			const data: ISSNowResponseData =
+				(await response.json()) as ISSNowResponseData
+			res.status(200).json(data)
+		} else {
+			throw new Error(
+				`Response not OK: ${response.status} ${response.statusText}`
+			)
 		}
 	} catch (error) {
 		console.error('Error fetching ISS location:', error)
+		res.status(500).send('Internal Server Error')
 	}
-}, 10000)
-
-// Initialize the server with the contract
-const s = initServer()
-const router = s.router(contract, {
-	getIssLocation: async () => ({
-		status: 200,
-		body: issLocation,
-	}),
 })
 
-// Create endpoints
-createExpressEndpoints(contract, router, app)
-
-app.listen(port, () => {
-	console.log(`Server is running on http://localhost:${port}`)
+app.listen(serverPort, () => {
+	console.log(`Server is running on http://localhost:${serverPort}`)
 })

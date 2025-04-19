@@ -1,8 +1,10 @@
-import L from 'leaflet';
-import { useEffect, useState } from 'react';
-import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+import L from 'leaflet'
+import { useEffect, useState } from 'react'
+import { MapContainer, Marker, TileLayer } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+import { FaSync } from 'react-icons/fa'
 import './App.css'
+import { ISSNowResponseData } from './types'
 
 const issIcon = new L.Icon({
 	iconUrl: '/iss.png',
@@ -10,14 +12,20 @@ const issIcon = new L.Icon({
 })
 
 function App() {
-	const [issLocation, setIssLocation] = useState({ latitude: 0, longitude: 0 })
-	const [lastUpdate, setLastUpdate] = useState('')
+	const [issLocation, setIssLocation] = useState<{
+		latitude: number
+		longitude: number
+	}>({
+		latitude: 0,
+		longitude: 0,
+	})
+	const [lastUpdate, setLastUpdate] = useState<string>('')
 
 	const fetchIssLocation = async () => {
 		try {
 			const response = await fetch('http://localhost:3000/iss-location')
 			if (response.ok) {
-				const data = await response.json()
+				const data: ISSNowResponseData = await response.json()
 				setIssLocation({
 					latitude: parseFloat(data.iss_position.latitude),
 					longitude: parseFloat(data.iss_position.longitude),
@@ -25,6 +33,10 @@ function App() {
 				const date = new Date(data.timestamp * 1000)
 				const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()} (${Intl.DateTimeFormat().resolvedOptions().timeZone})`
 				setLastUpdate(formattedDate)
+			} else {
+				throw new Error(
+					`Response not OK: ${response.status} ${response.statusText}`
+				)
 			}
 		} catch (error) {
 			console.error('Error fetching ISS location:', error)
@@ -55,6 +67,9 @@ function App() {
 				/>
 			</MapContainer>
 			<div className="info-container">
+				<button className="refresh-button" onClick={fetchIssLocation}>
+					<FaSync />
+				</button>
 				<span>Last Update: {lastUpdate}</span>
 			</div>
 		</div>

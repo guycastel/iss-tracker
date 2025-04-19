@@ -1,5 +1,5 @@
 # Background
-This project is an assignment given to a job applicant by the hiring company as a test for software development skills.
+This project is an assignment given to a job applicant by the hiring company as a test for software development skiils.
 The code should be of high quality, readable, concise, and uses best practices up to par with modern industry standards.
 
 # Goal
