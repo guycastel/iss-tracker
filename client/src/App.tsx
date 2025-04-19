@@ -2,6 +2,7 @@ import L from 'leaflet';
 import { useEffect, useState } from 'react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import './App.css'
 
 const issIcon = new L.Icon({
 	iconUrl: '/iss.png',
@@ -10,23 +11,27 @@ const issIcon = new L.Icon({
 
 function App() {
 	const [issLocation, setIssLocation] = useState({ latitude: 0, longitude: 0 })
+	const [lastUpdate, setLastUpdate] = useState('')
+
+	const fetchIssLocation = async () => {
+		try {
+			const response = await fetch('http://localhost:3000/iss-location')
+			if (response.ok) {
+				const data = await response.json()
+				setIssLocation({
+					latitude: parseFloat(data.iss_position.latitude),
+					longitude: parseFloat(data.iss_position.longitude),
+				})
+				const date = new Date(data.timestamp * 1000)
+				const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()} (${Intl.DateTimeFormat().resolvedOptions().timeZone})`
+				setLastUpdate(formattedDate)
+			}
+		} catch (error) {
+			console.error('Error fetching ISS location:', error)
+		}
+	}
 
 	useEffect(() => {
-		const fetchIssLocation = async () => {
-			try {
-				const response = await fetch('http://localhost:3000/iss-location')
-				if (response.ok) {
-					const data = await response.json()
-					setIssLocation({
-						latitude: parseFloat(data.iss_position.latitude),
-						longitude: parseFloat(data.iss_position.longitude),
-					})
-				}
-			} catch (error) {
-				console.error('Error fetching ISS location:', error)
-			}
-		}
-
 		fetchIssLocation()
 		const interval = setInterval(fetchIssLocation, 10000)
 
@@ -49,6 +54,9 @@ function App() {
 					icon={issIcon}
 				/>
 			</MapContainer>
+			<div className="info-container">
+				<span>Last Update: {lastUpdate}</span>
+			</div>
 		</div>
 	)
 }
