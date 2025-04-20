@@ -21,7 +21,6 @@ app.use(
 	})
 )
 
-// Update the GET /iss-location endpoint to use ISSNowResponseData
 app.get('/api/iss-location', async (req, res) => {
 	try {
 		const response = await fetch(ISS_NOW_API_URL)

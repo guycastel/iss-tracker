@@ -10,7 +10,9 @@ type ISSLocation = [number, number] // [latitude, longitude]
 const DEFAULT_LOCATION: ISSLocation = [0, 0]
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL ?? 'http://localhost:3000'
-const POLLING_INTERVAL = import.meta.env.VITE_POLLING_INTERVAL ? parseInt(import.meta.env.VITE_POLLING_INTERVAL) : 10000
+const POLLING_INTERVAL = import.meta.env.VITE_POLLING_INTERVAL
+	? parseInt(import.meta.env.VITE_POLLING_INTERVAL)
+	: 10000
 
 const issIcon = new L.Icon({
 	iconUrl: '/iss.png',
