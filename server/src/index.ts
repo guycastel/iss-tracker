@@ -6,18 +6,22 @@ import express from 'express'
 import fetch from 'node-fetch'
 import { ISSNowResponseData } from './types'
 
-const serverPort: string = process.env.SERVER_PORT ?? '3000'
-const clientPort: string = process.env.CLIENT_PORT ?? '5173'
-const enableAllOrigins: boolean = process.env.ENABLE_ALL_ORIGINS === 'true'
-const allowedOrigins: string[] = [`http://localhost:${clientPort}`]
-
 const ISS_NOW_API_URL: string = 'http://api.open-notify.org/iss-now.json'
+
+const SERVER_PORT: string = process.env.SERVER_PORT ?? '3000'
+const CLIENT_PORT: string = process.env.CLIENT_PORT ?? '5173'
+const CORS_ENABLE_ALL_ORIGINS: boolean =
+	(process.env.CORS_ENABLE_ALL_ORIGINS ?? '').toLowerCase() === 'true'
+
+const allowedOrigins: string[] = CORS_ENABLE_ALL_ORIGINS
+	? ['*']
+	: [`http://localhost:${CLIENT_PORT}`]
 
 const app = express()
 
 app.use(
 	cors({
-		origin: enableAllOrigins ? true : allowedOrigins,
+		origin: CORS_ENABLE_ALL_ORIGINS ? true : allowedOrigins,
 	})
 )
 
@@ -39,6 +43,6 @@ app.get('/api/iss-location', async (req, res) => {
 	}
 })
 
-app.listen(serverPort, () => {
-	console.log(`Server is running on http://localhost:${serverPort}`)
+app.listen(SERVER_PORT, () => {
+	console.log(`Server is running on http://localhost:${SERVER_PORT}`)
 })
