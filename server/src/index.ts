@@ -13,9 +13,7 @@ const CLIENT_PORT: string = process.env.CLIENT_PORT ?? '5173'
 const CORS_ENABLE_ALL_ORIGINS: boolean =
 	(process.env.CORS_ENABLE_ALL_ORIGINS ?? '').toLowerCase() === 'true'
 
-const allowedOrigins: string[] = CORS_ENABLE_ALL_ORIGINS
-	? ['*']
-	: [`http://localhost:${CLIENT_PORT}`]
+const allowedOrigins: string[] = [`http://localhost:${CLIENT_PORT}`]
 
 const app = express()
 
