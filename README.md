@@ -13,6 +13,7 @@ It was created as part of a coding assignment to demonstrate coding abilities by
 ## A Few Notes
 
 - Clicking on the ISS image will popup its position details.
+- See [`server/README.md`](server/README.md) for API documentation.
 - This project makes use of `.env` files in both the server and client, mainly to allow the user to define custom ports and avoid CORS issues.  
 - At first, I considered using react-query and an API management library, but they were overkill for the single API request this project requires. I opted for "vanilla" React + Express instead.  
 - In keeping with the times, I used AI in the creation of this project — specifically GitHub Copilot Agent mode in VSCode. You can see the initial [`docs/project-requirements.md`](docs/project-requirements.md) file that I provided to get a head start. That said, I faced countless issues and disappointments with its output, which had to be heavily reworked.  
