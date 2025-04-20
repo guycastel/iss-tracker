@@ -1,15 +1,16 @@
 import L from 'leaflet'
 import { useEffect, useState } from 'react'
-import { MapContainer, Marker, TileLayer } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { FaSync } from 'react-icons/fa'
 import './App.css'
 import { ISSNowResponseData } from './types'
 
-type ISS_LOCATION_TYPE = [number, number] // [latitude, longitude]
-const DEFAULT_LOCATION: ISS_LOCATION_TYPE = [0, 0]
+type ISSLocation = [number, number] // [latitude, longitude]
+const DEFAULT_LOCATION: ISSLocation = [0, 0]
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL ?? 'http://localhost:3000'
+const POLLING_INTERVAL = import.meta.env.VITE_POLLING_INTERVAL ? parseInt(import.meta.env.VITE_POLLING_INTERVAL) : 10000
 
 const issIcon = new L.Icon({
 	iconUrl: '/iss.png',
@@ -17,8 +18,7 @@ const issIcon = new L.Icon({
 })
 
 function App() {
-	const [issLocation, setIssLocation] =
-		useState<ISS_LOCATION_TYPE>(DEFAULT_LOCATION)
+	const [issLocation, setIssLocation] = useState<ISSLocation>(DEFAULT_LOCATION)
 	const [lastUpdateUnixTime, setLastUpdateUnixTime] = useState<number>(0)
 	const [isIssLocated, setIsIssLocated] = useState<boolean>(false)
 
@@ -45,7 +45,7 @@ function App() {
 
 	useEffect(() => {
 		fetchIssLocation()
-		const interval = setInterval(fetchIssLocation, 10000)
+		const interval = setInterval(fetchIssLocation, POLLING_INTERVAL)
 
 		return () => clearInterval(interval)
 	}, [])
@@ -68,7 +68,14 @@ function App() {
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 					attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
 				/>
-				{isIssLocated && <Marker position={issLocation} icon={issIcon} />}
+				{isIssLocated && (
+					<Marker position={issLocation} icon={issIcon}>
+						<Popup>
+							<b>lat</b>: {issLocation[0]} <br />
+							<b>lng</b>: {issLocation[1]}
+						</Popup>
+					</Marker>
+				)}
 			</MapContainer>
 			<div className="info-container">
 				<button className="refresh-button" onClick={fetchIssLocation}>

@@ -23,12 +23,13 @@
 	border-radius: 5px;
 	padding: 5px 10px;
 	cursor: pointer;
-}
-
-.refresh-button:hover {
-	background-color: #0056b3;
-}
-
-.refresh-button:active {
-	background-color: #003f7f;
+	
+	&:hover {
+		background-color: #0056b3;
+	}
+	
+	&:active {
+		background-color: #003f7f;
+		transform: translateY(1px);
+	}
 }
