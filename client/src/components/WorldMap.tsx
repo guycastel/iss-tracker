@@ -1,11 +1,12 @@
 import L from 'leaflet'
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { ISSLocation } from '../types'
+import { DEFAULT_TIMESTAMP } from './ISSLocationView'
 import 'leaflet/dist/leaflet.css'
 import './WorldMap.css'
 
 interface WorldMapProps {
-	readonly isIssLocated: boolean
+	readonly lastUpdateUnixTime: number
 	readonly issLocation: ISSLocation
 }
 
@@ -14,7 +15,7 @@ const issIcon = new L.Icon({
 	iconSize: [50, 50],
 })
 
-function WorldMap({ isIssLocated, issLocation }: WorldMapProps) {
+function WorldMap({ lastUpdateUnixTime, issLocation }: WorldMapProps) {
 	return (
 		<MapContainer
 			center={issLocation}
@@ -25,7 +26,7 @@ function WorldMap({ isIssLocated, issLocation }: WorldMapProps) {
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
 			/>
-			{isIssLocated && (
+			{lastUpdateUnixTime != DEFAULT_TIMESTAMP && (
 				<Marker position={issLocation} icon={issIcon}>
 					<Popup>
 						<b>lat</b>: {issLocation.lat} <br />

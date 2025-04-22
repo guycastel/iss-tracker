@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { ISSNowResponseData, ISSLocation } from '../types'
+import { ISSNowResponseData, ISSLocation, LocationStatus } from '../types'
 import WorldMap from './WorldMap'
 import Panel from './Panel'
 
+export const DEFAULT_TIMESTAMP: number = -1
 const DEFAULT_LOCATION: ISSLocation = { lat: 0, lng: 0 }
 
 const SERVER_URL: string =
@@ -13,10 +14,14 @@ const POLLING_INTERVAL: number = import.meta.env.VITE_POLLING_INTERVAL
 
 function ISSLocationView() {
 	const [issLocation, setIssLocation] = useState<ISSLocation>(DEFAULT_LOCATION)
-	const [lastUpdateUnixTime, setLastUpdateUnixTime] = useState<number>(0)
-	const [isIssLocated, setIsIssLocated] = useState<boolean>(false)
+	const [lastUpdateUnixTime, setLastUpdateUnixTime] =
+		useState<number>(DEFAULT_TIMESTAMP)
+	const [locationStatus, setLocationStatus] = useState<LocationStatus>(
+		LocationStatus.PENDING
+	)
 
 	const fetchIssLocation = async () => {
+		setLocationStatus(LocationStatus.LOADING)
 		try {
 			const response = await fetch(`${SERVER_URL}/api/iss-location`)
 			if (response.ok) {
@@ -26,7 +31,7 @@ function ISSLocationView() {
 					lat: parseFloat(data.iss_position.latitude),
 					lng: parseFloat(data.iss_position.longitude),
 				})
-				setIsIssLocated(true)
+				setLocationStatus(LocationStatus.SUCCESS)
 			} else {
 				throw new Error(
 					`Response not OK: ${response.status} ${response.statusText}`
@@ -34,6 +39,7 @@ function ISSLocationView() {
 			}
 		} catch (error) {
 			console.error('Error fetching ISS location:', error)
+			setLocationStatus(LocationStatus.FAILURE)
 		}
 	}
 
@@ -46,10 +52,13 @@ function ISSLocationView() {
 
 	return (
 		<>
-			<WorldMap issLocation={issLocation} isIssLocated={isIssLocated} />
+			<WorldMap
+				issLocation={issLocation}
+				lastUpdateUnixTime={lastUpdateUnixTime}
+			/>
 			<Panel
 				lastUpdateUnixTime={lastUpdateUnixTime}
-				isIssLocated={isIssLocated}
+				locationStatus={locationStatus}
 				fetchIssLocation={fetchIssLocation}
 			/>
 		</>

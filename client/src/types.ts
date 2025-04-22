@@ -14,3 +14,10 @@ export interface ISSNowResponseData {
 }
 
 export type ISSLocation = L.LatLngLiteral
+
+export enum LocationStatus {
+	PENDING = 'PENDING',
+	LOADING = 'LOADING',
+	SUCCESS = 'SUCCESS',
+	FAILURE = 'FAILURE',
+}
