@@ -1,8 +1,4 @@
-.leaflet-container {
-	z-index: 1;
-}
-
-.info-container {
+.panel-container {
 	position: absolute;
 	bottom: 20px;
 	left: 20px;
