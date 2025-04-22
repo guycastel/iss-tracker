@@ -81,8 +81,7 @@ You’ll need Node.js and npm installed.
 ## To Do
 (Bonus tasks and how would I solve them)
 - [ ] ISS velocity and period (lap time):  
-      Try to use [wheretheiss.at](https://wheretheiss.at/w/developer) public API.  
-      Also, extract the "Last update" container to a separate component that gets all field values and a callback for the refresh button as props from the parent.
+      Try to use [wheretheiss.at](https://wheretheiss.at/w/developer) public API.
       
 - [ ] Night shadow - try to use [Leaflet.Terminator](https://github.com/joergdietrich/Leaflet.Terminator) plugin.
 
