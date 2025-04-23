@@ -20,27 +20,31 @@ function ISSLocationView() {
 		LocationStatus.PENDING
 	)
 
-	const fetchIssLocation = async () => {
+	const fetchIssLocation = async (): Promise<void> => {
 		setLocationStatus(LocationStatus.LOADING)
-		try {
-			const response = await fetch(`${SERVER_URL}/api/iss-location`)
-			if (response.ok) {
-				const data: ISSNowResponseData = await response.json()
+
+		return fetch(`${SERVER_URL}/api/iss-location`)
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(
+						`Response not OK: ${response.status} ${response.statusText}`
+					)
+				}
+				return response.json()
+			})
+			.then((data: ISSNowResponseData) => {
 				setLastUpdateUnixTime(data.timestamp)
 				setIssLocation({
 					lat: parseFloat(data.iss_position.latitude),
 					lng: parseFloat(data.iss_position.longitude),
 				})
 				setLocationStatus(LocationStatus.SUCCESS)
-			} else {
-				throw new Error(
-					`Response not OK: ${response.status} ${response.statusText}`
-				)
-			}
-		} catch (error) {
-			console.error('Error fetching ISS location:', error)
-			setLocationStatus(LocationStatus.FAILURE)
-		}
+			})
+			.catch((error) => {
+				console.error('Error fetching ISS location:', error)
+				setLocationStatus(LocationStatus.FAILURE)
+				// throw error // optional re-throw to maintain Promise rejection
+			})
 	}
 
 	useEffect(() => {
