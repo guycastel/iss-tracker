@@ -13,6 +13,7 @@ It was created as part of a coding assignment to demonstrate coding abilities by
 ## A Few Notes
 
 - Clicking on the ISS image will popup its position details.
+- App displays feedback based on server response or its absence.
 - See [`server/README.md`](server/README.md) for API documentation.
 - This project makes use of `.env` files in both the server and client, mainly to allow the user to define custom ports and avoid CORS issues.  
 - At first, I considered using react-query and an API management library, but they were overkill for the single API request this project requires. I opted for "vanilla" React + Express instead.  
