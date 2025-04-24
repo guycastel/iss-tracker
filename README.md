@@ -80,15 +80,16 @@ You’ll need Node.js and npm installed.
 - Access the application in your browser at `http://localhost:5173` (or another port if configured).
 
 ## To Do
-(Bonus tasks and how would I solve them)
+(Bonus tasks and how I would solve them)
 - [ ] ISS velocity and period (lap time):  
-      Try to use [wheretheiss.at](https://wheretheiss.at/w/developer) public API.
-      
-- [ ] Night shadow - try to use [Leaflet.Terminator](https://github.com/joergdietrich/Leaflet.Terminator) plugin.
+      Use [wheretheiss.at](https://wheretheiss.at/w/developer) public API that contains velocity.  
 
-- [ ] Draw ISS flight path - to draw the path the ISS flew over the time the app was running I would save the last X positions we sampled (let's say in the frontend) and use them to draw a line on the map.  
-      To draw the expected path we'll need to search harder for that data...
-      
+- [ ] Draw ISS flight path:  
+      Use [wheretheiss.at](https://wheretheiss.at/w/developer) public API to get multiple past/future positions and draw a line connecting them.  
+
+- [ ] Night shadow:  
+      Try to use [Leaflet.Terminator](https://github.com/joergdietrich/Leaflet.Terminator) plugin.  
+
 - [ ] Unit tests
 
 ## License
