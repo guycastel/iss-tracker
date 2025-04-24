@@ -81,14 +81,14 @@ You’ll need Node.js and npm installed.
 
 ## To Do
 (Bonus tasks and how I would solve them)
+- [X] Night shadow:  
+      Use [Leaflet.Terminator](https://github.com/joergdietrich/Leaflet.Terminator) plugin.  
+
 - [ ] ISS velocity and period (lap time):  
       Use [wheretheiss.at](https://wheretheiss.at/w/developer) public API that contains velocity.  
 
 - [ ] Draw ISS flight path:  
       Use [wheretheiss.at](https://wheretheiss.at/w/developer) public API to get multiple past/future positions and draw a line connecting them.  
-
-- [ ] Night shadow:  
-      Try to use [Leaflet.Terminator](https://github.com/joergdietrich/Leaflet.Terminator) plugin.  
 
 - [ ] Unit tests
 
